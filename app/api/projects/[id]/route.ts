@@ -5,14 +5,15 @@ import { requireAuth } from "@/lib/requireAuth";
 
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const session = await requireAuth();
 
   await connectToDB();
 
   const project = await Project.findOne({
-    _id: params.id,
+    _id: id,
     ownerId: session.userId,
   });
 
